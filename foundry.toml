@@ -1,16 +1,16 @@
 [profile.default]
-src = "src"
+src = "contracts"
 out = "out"
 libs = ["lib"]
 
 # Monad Configuration
 # TODO: Add RPC URL and Chain ID
-eth-rpc-url="MONAD_RPC_URL"
-chain_id = "MONAD_CHAIN_ID"
+eth-rpc-url="https://testnet-rpc2.monad.xyz/52227f026fa8fac9e2014c58fbf5643369b3bfc6"
+chain_id = 10143
 
 
 # TODO: Add Explorer URL and Chain ID
 [etherscan]
-monadDevnet = { key = "DUMMY_VALUE", url = "EXPLORER_URL", chain = MONAD_CHAIN_ID }
+monadDevnet = { key = "random", url = "https://testnet-rpc2.monad.xyz/52227f026fa8fac9e2014c58fbf5643369b3bfc6", chain = 10143 }
 
 # See more config options https://github.com/foundry-rs/foundry/blob/master/crates/config/README.md#all-options
