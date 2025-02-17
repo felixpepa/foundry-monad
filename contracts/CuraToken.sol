@@ -37,15 +37,15 @@ contract CuraToken is ERC20 {
         blacklist[account] = status;
     }
 
-    function _beforeTokenTransfer(
+    function _update(
         address from,
         address to,
         uint256 amount
-    ) internal override {
+    ) internal virtual override {
         require(!blacklist[to], "Transfer to blacklisted account not allowed");
         if (from != address(0)) {
             require(whitelist[from], "Sender not in whitelist");
         }
-        super._beforeTokenTransfer(from, to, amount);
+        super._update(from, to, amount);
     }
 } 

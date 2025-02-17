@@ -1,9 +1,12 @@
 pragma solidity ^0.8.13;
 import "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
+import "@openzeppelin/contracts/utils/cryptography/MessageHashUtils.sol";
 import "./CuraToken.sol";
-using ECDSA for bytes32;
 
 contract RewardDistribution {
+    using ECDSA for bytes32;
+    using MessageHashUtils for bytes32;
+    
     CuraToken public token;
     AdminManagement public adminManagement;
 
@@ -22,7 +25,11 @@ contract RewardDistribution {
     ) external {
         require(!processedRewardIds[rewardId], "Duplicate reward id");
         bytes32 messageHash = keccak256(abi.encodePacked(rewardId, recipient, amount));
-        address signer = recoverSigner(messageHash, signature);
+        // Hash the message according to EIP-191
+        bytes32 ethSignedMessageHash = MessageHashUtils.toEthSignedMessageHash(messageHash);
+        // Recover the signer
+        address signer = ECDSA.recover(ethSignedMessageHash, signature);
+        
         require(
             adminManagement.admins(signer) || signer == adminManagement.superAdmin(),
             "Unauthorized"
@@ -36,6 +43,7 @@ contract RewardDistribution {
         pure
         returns (address)
     {
-        return ECDSA.recover(ECDSA.toEthSignedMessageHash(message), sig);
+        bytes32 ethSignedMessageHash = MessageHashUtils.toEthSignedMessageHash(message);
+        return ECDSA.recover(ethSignedMessageHash, sig);
     }
 } 
